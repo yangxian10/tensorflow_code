@@ -92,7 +92,7 @@ class YOLO_TF:
 			'bfc26': self.bias_variable([self.grid_size*self.grid_size*(5*self.num_box+self.num_class)])
 			}
 		'''
-		self.params = np.load(weights_file)[None][0]
+		self.params = np.load(weights_file).item()
 		self.pred = self.create_yolo(self.x)
 		self.sess = tf.Session()
 		self.sess.run(tf.initialize_all_variables())
