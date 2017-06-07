@@ -99,7 +99,7 @@ def ocr_net(_x, _weights, _biases):
 	fc24 = tf.nn.relu(tf.matmul(fc1, _weights['out4']) + _biases['out4'], name='fc24')
 	print_activations(fc24)
 
-	out = tf.concat(1, [fc21, fc22, fc23, fc24], name='out')
+	out = tf.concat(axis=1, values=[fc21, fc22, fc23, fc24], name='out')
 	print_activations(out)
 	return out
 
@@ -119,9 +119,12 @@ optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)
 #accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 accuracy = accuracy_func(pred, y)
 
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 
-with tf.Session() as sess:
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+
+with tf.Session(config=config) as sess:
 	sess.run(init)
 	step = 1# Keep training until reach max iterations
 	while step * batch_size < training_iters:
